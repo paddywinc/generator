@@ -12,6 +12,5 @@ Includes "g-component" markup for GIA
 
 ## To do
 
-<ul>
-    <li>Check php template rendering correct class</li>
-</ul>
+- [ ] Check php template rendering correct class
+- [ ] Update readme for current build specs
