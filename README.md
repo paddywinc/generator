@@ -1,3 +1,5 @@
+#WordPress Component Generator#
+
 This is a basic CLI that we use when creating ACF layouts or components.
 
 Add the below to package.json
