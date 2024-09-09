@@ -9,3 +9,9 @@ Add the below to package.json
 Check paths in generate-component.js to make sure files are placed in the correct place. 
 
 Includes "g-component" markup for GIA
+
+## To do
+
+<ul>
+    <li>Check php template rendering correct class</li>
+</ul>
