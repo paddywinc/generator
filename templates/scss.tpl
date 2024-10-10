@@ -1,0 +1,2 @@
+// Styles for ${componentName}
+.${componentName} {}
