@@ -2,10 +2,12 @@ import { existsSync, readFileSync, appendFileSync, writeFile } from "fs";
 import { resolve } from "path";
 
 // Function to update the components.js file with the new component import
+// Function to update the components.js file with the new component import
+// Function to update the components.js file with the new component import
 export const updateComponentsFile = (componentName) => {
   const componentsFilePath = resolve("assets/src/js/components.js");
-  const importStatement = `import ${componentName} from './components/c-${componentName}';`;
-  const objectEntry = `  ${componentName},`;
+  const importStatement = `import ${componentName} from './components/c-${componentName}'`;
+  const objectEntry = `  ${componentName}`;
 
   let componentsFileContent = "";
 
@@ -35,14 +37,15 @@ export const updateComponentsFile = (componentName) => {
     if (objectMatch) {
       let updatedObject = objectMatch[0];
       if (!updatedObject.includes(objectEntry)) {
-        updatedObject = updatedObject.replace("};", `${objectEntry}\n};`);
+        // Remove the closing brace and add the new entry without a trailing semicolon
+        updatedObject = updatedObject.replace("}", `${objectEntry}\n}`);
         componentsFileContent = componentsFileContent.replace(
           objectMatch[0],
           updatedObject
         );
       }
     } else {
-      const initialContent = `import ${componentName} from './components/c-${componentName}';\n\nconst components = {\n  ${componentName.toLowerCase()}: ${componentName},\n};\n\nexport default components;\n`;
+      const initialContent = `import ${componentName} from './components/c-${componentName}';\n\nconst components = {\n  ${componentName.toLowerCase()}: ${componentName}\n};\n\nexport default components;\n`;
       writeFile(componentsFilePath, initialContent, (err) => {
         if (err) throw err;
         console.log(`Created components file: ${componentsFilePath}`);
@@ -50,13 +53,20 @@ export const updateComponentsFile = (componentName) => {
       return;
     }
 
+    // Clean up the components object to ensure no extra semicolons are present
+    componentsFileContent = componentsFileContent.replace(/,\s*;\s*}/g, "}"); // Remove any trailing semicolons before closing brace
+    componentsFileContent = componentsFileContent.replace(/,\s*}/g, "}"); // Remove any trailing commas before closing brace
+
     writeFile(componentsFilePath, componentsFileContent, (err) => {
       if (err) throw err;
       console.log(`Updated components file: ${componentsFilePath}`);
     });
   } else {
-    const initialContent = `import ${componentName} from './components/c-${componentName}';\n\nconst components = {\n  ${componentName.toLowerCase()}: ${componentName},\n};\n\nexport default components;\n`;
-    createFile(resolve("assets/src/js"), "components.js", initialContent);
+    const initialContent = `import ${componentName} from './components/c-${componentName}';\n\nconst components = {\n  ${componentName.toLowerCase()}: ${componentName}\n};\n\nexport default components;\n`;
+    writeFile(componentsFilePath, initialContent, (err) => {
+      if (err) throw err;
+      console.log(`Created components file: ${componentsFilePath}`);
+    });
   }
 };
 

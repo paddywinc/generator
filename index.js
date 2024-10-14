@@ -70,15 +70,11 @@ const main = async () => {
 
   const phpContent = applyTemplate(phpTemplatePath, templateValues);
   createFile(baseDir, `${prefixedComponentName}.php`, phpContent);
-  injectCodeInSection(
-    "assets/src/js/components.js",
-    "Component Imports",
-    `import ${componentName} from './components/c-${componentName}';`
-  );
 
   if (createJS) {
     const jsContent = applyTemplate(jsTemplatePath, templateValues);
     createFile(jsDir, `c-${pascalComponentName}.js`, jsContent);
+    // Call the updateComponentsFile to handle imports
     updateComponentsFile(pascalComponentName);
   }
 
