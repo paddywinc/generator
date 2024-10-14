@@ -9,7 +9,7 @@ import { resolve, join } from "path";
 import inquirer from "inquirer";
 
 // Function to convert string to camel case
-const toCamelCase = (str) => {
+const toKebabCase = (str) => {
   return str
     .replace(/[^a-zA-Z0-9\s]/g, "") // Remove non-alphanumeric characters except spaces
     .replace(/\s+(.)/g, (_, c) => c.toUpperCase()); // Convert spaces to camel case
@@ -17,11 +17,11 @@ const toCamelCase = (str) => {
 };
 
 // Function to remove prefix and convert to camel case
-const removePrefixAndToCamelCase = (name, prefix) => {
+const removePrefixAndToKebabCase = (name, prefix) => {
   if (name.startsWith(prefix)) {
     name = name.slice(prefix.length);
   }
-  return toCamelCase(name);
+  return toKebabCase(name);
 };
 
 // Function to replace placeholders in a template
@@ -102,7 +102,7 @@ const updateComponentsFile = (componentName) => {
     // Add import statement if not already present
     if (!componentsFileContent.includes(importStatement)) {
       const importSectionEndIndex = componentsFileContent.indexOf(
-        "const components = {",
+        "const components = {"
       );
 
       if (importSectionEndIndex === -1) {
@@ -119,7 +119,7 @@ const updateComponentsFile = (componentName) => {
 
     // Update the components object
     const objectMatch = componentsFileContent.match(
-      /const components = \{[^]*?\};/,
+      /const components = \{[^]*?\};/
     );
     if (objectMatch) {
       let updatedObject = objectMatch[0];
@@ -128,7 +128,7 @@ const updateComponentsFile = (componentName) => {
         updatedObject = updatedObject.replace("};", `${objectEntry}\n};`);
         componentsFileContent = componentsFileContent.replace(
           objectMatch[0],
-          updatedObject,
+          updatedObject
         );
       }
     } else {
@@ -161,7 +161,7 @@ const injectCodeInSection = (filePath, sectionHeader, importStatement) => {
     // Define regex patterns to find the section and its end
     const sectionPattern = new RegExp(
       `\\/\\*\\s*${sectionHeader}\\s*\\s*([\\s\\S]*?)(\\/\\*|$)`,
-      "m",
+      "m"
     );
 
     // Find section
@@ -176,7 +176,7 @@ const injectCodeInSection = (filePath, sectionHeader, importStatement) => {
         const updatedSectionContent = `${sectionContent.trim()}\n${importStatement}`;
         const updatedFileContent = fileContent.replace(
           fullMatch,
-          `${fullMatch.replace(sectionContent, updatedSectionContent)}`,
+          `${fullMatch.replace(sectionContent, updatedSectionContent)}`
         );
         writeFile(filePath, updatedFileContent, (err) => {
           if (err) throw err;
@@ -199,7 +199,7 @@ inquirer.prompt(questions).then((answers) => {
 
   // Define prefix and convert rawComponentName to camel case without the prefix
   const prefix = componentType === "Layout" ? "l-" : "c-";
-  const componentName = removePrefixAndToCamelCase(rawComponentName, prefix);
+  const componentName = removePrefixAndToKebabCase(rawComponentName, prefix);
   const prefixedComponentName = `${prefix}${componentName}`;
 
   // Set base directories based on whether it's a layout or a component
@@ -233,7 +233,7 @@ inquirer.prompt(questions).then((answers) => {
   let scssContent = applyTemplate(scssTemplatePath, templateValues);
   scssContent = scssContent.replace(
     `.${componentName}`, // Look for the class definition in SCSS
-    `.${prefixedComponentName}`, // Add prefix
+    `.${prefixedComponentName}` // Add prefix
   );
 
   const jsContent = applyTemplate(jsTemplatePath, templateValues);
@@ -255,6 +255,6 @@ inquirer.prompt(questions).then((answers) => {
   injectCodeInSection(
     resolve("assets/src/scss", "main.scss"),
     sectionHeader,
-    `@import "${componentType.toLowerCase()}/${prefixedComponentName}";`,
+    `@import "${componentType.toLowerCase()}/${prefixedComponentName}";`
   );
 });

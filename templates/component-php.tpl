@@ -2,13 +2,13 @@
 if (!defined('ABSPATH')) exit;
 
 /**
- * ContentType ${rawComponentName} Class.
+ * ContentType ${pascalComponentName} Class.
  *
  * @class       ContentType
  * @version     1.0.0
  */
 
-class ${rawComponentName}
+class ${pascalComponentName}
 {
 
   public static function render()

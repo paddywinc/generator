@@ -1,6 +1,6 @@
 import Component from "gia/Component";
 
-export default class ${rawComponentName} extends Component {
+export default class ${pascalComponentName} extends Component {
 
  constructor(element) {
     super(element);
